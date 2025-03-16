@@ -3,12 +3,11 @@
 - Can be used as AutoClicker  
 
 # How it works?
-Since ROBLOX does not register inputs if its unfocused.  
+Since ROBLOX does not register inputs if its unfocused. This program helps you to continue whatever you are doing while AFK Farming or grinding in the background!  
 The program's logic is the following:    
 - focuses the roblox client
 - send the input
 - unfocuses roblox client  
-so that you can continue whatever you are doing!  
 
 # How to start?
 Install AutoHotKey (AHK) from their [website](https://www.autohotkey.com/).  
