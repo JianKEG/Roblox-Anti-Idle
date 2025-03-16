@@ -2,7 +2,7 @@
 - Anti AFK for ROBLOX
 - Can be used as AutoClicker
 
-# [!IMPORTANT]
+[!IMPORTANT]
 Potential Windows Defender/AntiVirus False Positive! My project is safe and does not contain any malicious code.
 
 # How it works?
