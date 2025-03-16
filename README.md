@@ -1,3 +1,4 @@
+# Make sure Roblox Client is not in fullscreen!
 # Roblox Anti-Idle (AutoHotKey)
 - Anti AFK for ROBLOX
 - Can be used as AutoClicker  
