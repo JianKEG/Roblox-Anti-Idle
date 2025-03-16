@@ -19,4 +19,4 @@ Once downloaded, it's all pretty self-explanatory.
 **F1** - to start the script  
 **F2** - to stop the script  
 **F4** - to capture the cursor position (once you clicked "Capture Position")  
-**Esc** - to close the script
+**Esc** - to close the script (Script will not close unless pressed)
