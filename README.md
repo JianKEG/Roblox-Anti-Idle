@@ -1,6 +1,9 @@
 # Roblox Anti-Idle
 - Anti AFK for ROBLOX
-- Can be used as AutoClicker  
+- Can be used as AutoClicker
+
+# [!IMPORTANT]
+Potential Windows Defender/AntiVirus False Positive! My project is safe and does not contain any malicious code.
 
 # How it works?
 Since ROBLOX does not register inputs if its unfocused. This program helps you to continue whatever you are doing while AFK Farming or grinding in the background!  
