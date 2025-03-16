@@ -15,7 +15,7 @@ The program's logic is the following:
 
 # How to start?
 Install AutoHotKey (AHK) from their [website](https://www.autohotkey.com/).  
-Head to [releases](https://github.com/JianKEG/Roblox-Anti-Idle/releases) to download the exe file.  
+Head to [releases](https://github.com/JianKEG/Roblox-Anti-Idle/releases) to download the exe file or download the script and run it.  
 Once downloaded, it's all pretty self-explanatory.   
 **Make sure Roblox Client is not in fullscreen!**  
 # Keybinds
