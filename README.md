@@ -1,4 +1,4 @@
-# Roblox Anti-Idle (AutoHotKey)
+# Roblox Anti-Idle
 - Anti AFK for ROBLOX
 - Can be used as AutoClicker  
 
