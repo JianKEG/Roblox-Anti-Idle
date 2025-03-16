@@ -16,7 +16,7 @@ Head to releases to download the exe file.
 Once downloaded, it's all pretty self-explanatory.  
 
 # Keybinds
-**F1** - to start the script
-**F2** - to stop the script
-**F4** - to capture the cursor position (once you clicked "Capture Position")
+**F1** - to start the script  
+**F2** - to stop the script  
+**F4** - to capture the cursor position (once you clicked "Capture Position")  
 **Esc** - to close the script
