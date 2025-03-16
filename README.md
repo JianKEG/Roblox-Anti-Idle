@@ -7,7 +7,7 @@ Since ROBLOX does not register inputs if its unfocused. This program helps you t
   
 The program's logic is the following:    
 - focuses the roblox client
-- send the input
+- sends the input
 - unfocuses roblox client  
 
 # How to start?
