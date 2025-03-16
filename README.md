@@ -1,4 +1,3 @@
-# Make sure Roblox Client is not in fullscreen!
 # Roblox Anti-Idle (AutoHotKey)
 - Anti AFK for ROBLOX
 - Can be used as AutoClicker  
@@ -15,6 +14,8 @@ The program's logic is the following:
 Install AutoHotKey (AHK) from their [website](https://www.autohotkey.com/).  
 Head to releases to download the exe file.  
 Once downloaded, it's all pretty self-explanatory.  
+
+# Make sure Roblox Client is not in fullscreen!
 
 # Keybinds
 **F1** - to start the script  
