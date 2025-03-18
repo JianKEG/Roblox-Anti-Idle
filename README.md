@@ -9,10 +9,15 @@
 Since ROBLOX does not register inputs if its unfocused. This program helps you to continue whatever you are doing while AFK Farming or grinding in the background!  
   
 The program's logic is the following:    
+**Mouse Click Method:**
 - focuses the roblox client  
 - sends the input  
+- unfocuses roblox client
+**Jump Method:**
+- focuses the roblox client
+- makes the roblox client transparent
+- sends the input
 - unfocuses roblox client  
-
 # How to start?
 Install AutoHotKey (AHK) from their [website](https://www.autohotkey.com/) if you want to run the script.  
 Head to [releases](https://github.com/JianKEG/Roblox-Anti-Idle/releases) to download the exe file (no need to install AHK).  
