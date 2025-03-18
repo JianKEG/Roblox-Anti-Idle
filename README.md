@@ -13,7 +13,7 @@ The program's logic is the following:
 **Mouse Click Method:**  
 - focuses the roblox client  
 - sends the input  
-- unfocuses roblox client  
+- unfocuses roblox client  /
 **Jump Method:**  
 - focuses the roblox client
 - makes the roblox client transparent
