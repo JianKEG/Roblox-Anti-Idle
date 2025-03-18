@@ -20,6 +20,7 @@ global PositionText
 global Button5
 global Button6
 
+; gui
 CreateClickerGUI()
 
 CreateClickerGUI() {
@@ -64,9 +65,11 @@ CreateClickerGUI() {
     Gui, Show, w300 h370
     return
 }
-
+; event handlers
 UpdateInterval:
     Gui, Submit, NoHide
+
+    ; checks if user inputted greater than the maximum range
 
     if (Minutes > 19){
         Minutes := 19
@@ -83,7 +86,8 @@ UpdateInterval:
         GuiControl,, Millisecs, 999
     }
 
-    newDelay := (Minutes * 60000) + (Seconds * 1000) + Millisecs
+    newDelay := (Minutes * 60000) + (Seconds * 1000) + Millisecs ; formula to convert to ms
+
     if (newDelay < 1)
         newDelay := 1
     clickDelay := newDelay
@@ -111,62 +115,18 @@ ResetInterval:
     ToolTip
     return
 
-CapturePositionBtn:
-    CapturePosition()
-    return
-
-F1::
-    StartClickingBtn:
-        StartClicking()
-        return
-    return
-F2::
-    StopClickingBtn:
-        StopClicking()
-        return
-    return
-F5::
-    ;shows or hides the gui
-    global isClicking
-
-    DetectHiddenWindows, On
-    if WinExist("Roblox Anti-Idle") {
-        WinGet, windowState, Style, Roblox Anti-Idle
-        isVisible := (windowState & 0x10000000) 
-        
-        if (isVisible) {
-         
-            WinHide, Roblox Anti-Idle
-            TrayTip, Roblox Anti-Idle, GUI hidden. Press F5 to show again., 2, 17
-        } else {
-
-            WinShow, Roblox Anti-Idle
-            
-            if (isClicking) {
-                GuiControl, Disable, Button5
-                GuiControl, Enable, Button6
-            } else {
-                GuiControl, Enable, Button5
-                GuiControl, Disable, Button6
-            }
-        }
-    } 
-
-    DetectHiddenWindows, Off
-    return
-
 SpaceMethod:
     Gui, Submit, NoHide
 
     useSpacebar := (IdleMethod = 2)
-        
+
     if (useSpacebar) {
         GuiControl, Disable, Capture Position
         GuiControl,, PositionText, Not needed
         ToolTip, Spacebar mode selected - position not needed, 5, 5
         Sleep, 1000
         ToolTip
-    } else {
+    } else { ; if not using the jump method
         GuiControl, Enable, Capture Position
         if (positionCaptured)
             GuiControl,, PositionText, X: %capturedX%, Y: %capturedY%
@@ -175,8 +135,13 @@ SpaceMethod:
     }
     return
 
+CapturePositionBtn:
+    CapturePosition()
+    return
+
+; functions
 CapturePosition() {
-    if (!WinExist("ahk_exe RobloxPlayerBeta.exe")) {
+    if (!WinExist("ahk_exe RobloxPlayerBeta.exe")) { ; error trap if roblox is not opened
         ToolTip, Error: Roblox is not running., 5, 5
         Sleep, 2000
         ToolTip
@@ -185,17 +150,17 @@ CapturePosition() {
     
     WinGet, previousWindow, ID, A
     
-    WinActivate, ahk_exe RobloxPlayerBeta.exe
+    WinActivate, ahk_exe RobloxPlayerBeta.exe ; focuses roblox client
     Sleep, 100  
     
     ToolTip, Now hover your mouse over the desired position and press F4, 5, 5
     KeyWait, F4, D
     KeyWait, F4
     
-    MouseGetPos, capturedX, capturedY, capturedWin
+    MouseGetPos, capturedX, capturedY, capturedWin ; gets mouse position when F4 is pressed
     
     WinGet, capturedExe, ProcessName, ahk_id %capturedWin%
-    if (capturedExe != "RobloxPlayerBeta.exe") {
+    if (capturedExe != "RobloxPlayerBeta.exe") { ; error trap if not positioned on roblox window
         ToolTip, Error: Position not captured on Roblox window, 5, 5
         Sleep, 2000
         ToolTip
@@ -217,7 +182,7 @@ CapturePosition() {
 StartClicking() {
     global isClicking, positionCaptured, useSpacebar
     
-    if (!useSpacebar && !positionCaptured) {
+    if (!useSpacebar && !positionCaptured) { ; error trap if position is not captured and if using jump method
         ToolTip, Please capture a position first!, 5, 5
         Sleep, 1000
         ToolTip
@@ -236,6 +201,7 @@ StartClicking() {
 
 StopClicking() {
     global isClicking
+
     isClicking := false
     
     SetTimer, PerformMacro, Off
@@ -249,10 +215,10 @@ StopClicking() {
 PerformMacro() {
     global isClicking, capturedX, capturedY, previousActiveWindow, wasPreviouslyMinimized, useSpacebar
     
-    if (!isClicking)
+    if (!isClicking) ; error trap if not started
         return
     
-    if (WinExist("ahk_exe RobloxPlayerBeta.exe")) {
+    if (WinExist("ahk_exe RobloxPlayerBeta.exe")) { ; checks if roblox is open
         WinGet, previousActiveWindow, ID, A
         
         WinGet, activeWin, ID, A
@@ -264,24 +230,24 @@ PerformMacro() {
         
         wasPreviouslyMinimized := (robloxMinMax = -1)
         
-        if (!robloxIsActive) {
-            if (useSpacebar){
-                WinSet, Transparent, 0, ahk_exe RobloxPlayerBeta.exe
+        if (!robloxIsActive) { ; checks if roblox is not the active window
+            if (useSpacebar){ ; checks if using jump method
+                WinSet, Transparent, 0, ahk_exe RobloxPlayerBeta.exe ; sets the roblox client to transparent
             }
 
-            if (wasPreviouslyMinimized) {
-                WinRestore, ahk_exe RobloxPlayerBeta.exe
+            if (wasPreviouslyMinimized) { ; checks if roblox was minimized
+                WinRestore, ahk_exe RobloxPlayerBeta.exe ; focuses roblox
             }
             
-            WinActivate, ahk_exe RobloxPlayerBeta.exe
+            WinActivate, ahk_exe RobloxPlayerBeta.exe ; shows the roblox client
             Sleep, 250
         }
         
-        if (useSpacebar) {
+        if (useSpacebar) { ; checks if using jump method
             Send, {Space down}
             Sleep, 50
             Send, {Space up}
-        } else {
+        } else { ; otherwise use mouseclick method
             MouseMove, capturedX+1, capturedY+1, 0 
             MouseMove, %capturedX%, %capturedY%, 0  
             Click, %capturedX% %capturedY%
@@ -291,28 +257,67 @@ PerformMacro() {
             Click, %capturedX% %capturedY%
         }
         
-        Sleep, 250
+        Sleep, 250 ; delay before minimizing roblox
         
-        if (!robloxIsActive) {
-            WinSet, Bottom,, ahk_exe RobloxPlayerBeta.exe
+        if (!robloxIsActive) { ; checks if roblox is not the active window
+            WinSet, Bottom,, ahk_exe RobloxPlayerBeta.exe ; sets the roblox client from the bottom
             
-            if (wasPreviouslyMinimized) {
-                WinMinimize, ahk_exe RobloxPlayerBeta.exe
+            if (wasPreviouslyMinimized) { 
+                WinMinimize, ahk_exe RobloxPlayerBeta.exe ; unfocuses roblox
             }
             
             if (useSpacebar){
-            WinSet, Transparent, 255, ahk_exe RobloxPlayerBeta.exe
+            WinSet, Transparent, 255, ahk_exe RobloxPlayerBeta.exe ; makes roblox cleint opaque
             }
             
-            WinActivate, ahk_id %previousActiveWindow%
+            WinActivate, ahk_id %previousActiveWindow% ; shows the previous active window
         }
-    } else {
+    } else { ; if roblox is not open
         StopClicking()
         ToolTip, Roblox window not found. Anti-Idle stopped., 5, 5
         Sleep, 3000
         ToolTip
     }
 }
+
+; keybinds
+F1:: ; starts the program
+    StartClickingBtn:
+        StartClicking()
+        return
+    return
+F2:: ; stops the program
+    StopClickingBtn:
+        StopClicking()
+        return
+    return
+F5:: ;shows or hides the gui
+    global isClicking
+
+    DetectHiddenWindows, On
+    if WinExist("Roblox Anti-Idle") {
+        WinGet, windowState, Style, Roblox Anti-Idle
+        isVisible := (windowState & 0x10000000) 
+        
+        if (isVisible) {
+            WinHide, Roblox Anti-Idle
+            TrayTip, Roblox Anti-Idle, GUI hidden. Press F5 to show again., 2, 17
+        } else {
+
+            WinShow, Roblox Anti-Idle
+            
+            if (isClicking) {
+                GuiControl, Disable, Button5
+                GuiControl, Enable, Button6
+            } else {
+                GuiControl, Enable, Button5
+                GuiControl, Disable, Button6
+            }
+        }
+    } 
+
+    DetectHiddenWindows, Off
+    return
 
 GuiClose:
     ExitApp
