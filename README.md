@@ -9,10 +9,11 @@
 Since ROBLOX does not register inputs if its unfocused. This program helps you to continue whatever you are doing while AFK Farming or grinding in the background!  
   
 The program's logic is the following:    
+
 **Mouse Click Method:**  
 - focuses the roblox client  
 - sends the input  
-- unfocuses roblox client  
+- unfocuses roblox client
 **Jump Method:**  
 - focuses the roblox client
 - makes the roblox client transparent
