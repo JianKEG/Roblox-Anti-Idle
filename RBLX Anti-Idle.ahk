@@ -4,13 +4,15 @@ SetBatchLines, -1
 SendMode Input
 
 global isClicking := false
-global clickDelay := 50 ; millisecs between clicks (default)
+global clickDelay := 50
 global capturedX := 0
 global capturedY := 0
 global positionCaptured := false
 global previousActiveWindow := 0
 global wasPreviouslyMinimized := false
+global useSpacebar := false
 
+global IdleMethod
 global Minutes
 global Seconds
 global Millisecs
@@ -18,7 +20,6 @@ global PositionText
 global Button5
 global Button6
 
-; create GUI
 CreateClickerGUI()
 
 CreateClickerGUI() {
@@ -48,15 +49,19 @@ CreateClickerGUI() {
     Gui, Add, Text, x170 y160 w120 h20 vPositionText, Not captured
     
     Gui, Add, Button, x30 y190 w230 h25 gCapturePositionBtn, Capture Position
+
+    Gui, Add, GroupBox, x10 y235 w280 h60, Anti-Idle Method
+    Gui, Add, Radio, x30 y255 w120 h30 vIdleMethod gSpaceMethod Checked, Mouse Click
+    Gui, Add, Radio, x160 y255 w100 h30 gSpaceMethod, Jump
+
+    Gui, Add, Button, x30 y305 w100 h30 gStartClickingBtn vButton5, Start
+    Gui, Add, Button, x160 y305 w100 h30 gStopClickingBtn vButton6 +Disabled, Stop
     
-    Gui, Add, Button, x30 y235 w100 h30 gStartClickingBtn vButton5, Start
-    Gui, Add, Button, x160 y235 w100 h30 gStopClickingBtn vButton6 +Disabled, Stop
-    
-    Gui, Add, Text, x10 y270 w280 h20 cGray, Created by jiankeg
+    Gui, Add, Text, x10 y345 w280 h20 cGray, Created by jiankeg
     
     GuiControl,, PositionText, Not captured
     
-    Gui, Show, w300 h300
+    Gui, Show, w300 h370
     return
 }
 
@@ -114,14 +119,63 @@ F1::
     StartClickingBtn:
         StartClicking()
         return
-
-F2::    
+    return
+F2::
     StopClickingBtn:
         StopClicking()
         return
+    return
+F5::
+    ;shows or hides the gui
+    global isClicking
+
+    DetectHiddenWindows, On
+    if WinExist("Roblox Anti-Idle") {
+        WinGet, windowState, Style, Roblox Anti-Idle
+        isVisible := (windowState & 0x10000000) 
+        
+        if (isVisible) {
+         
+            WinHide, Roblox Anti-Idle
+            TrayTip, Roblox Anti-Idle, GUI hidden. Press F5 to show again., 2, 17
+        } else {
+
+            WinShow, Roblox Anti-Idle
+            
+            if (isClicking) {
+                GuiControl, Disable, Button5
+                GuiControl, Enable, Button6
+            } else {
+                GuiControl, Enable, Button5
+                GuiControl, Disable, Button6
+            }
+        }
+    } 
+
+    DetectHiddenWindows, Off
+    return
+
+SpaceMethod:
+    Gui, Submit, NoHide
+
+    useSpacebar := (IdleMethod = 2)
+        
+    if (useSpacebar) {
+        GuiControl, Disable, Capture Position
+        GuiControl,, PositionText, Not needed
+        ToolTip, Spacebar mode selected - position not needed, 5, 5
+        Sleep, 1000
+        ToolTip
+    } else {
+        GuiControl, Enable, Capture Position
+        if (positionCaptured)
+            GuiControl,, PositionText, X: %capturedX%, Y: %capturedY%
+        else
+            GuiControl,, PositionText, Not captured
+    }
+    return
 
 CapturePosition() {
-    ; Check if Roblox is running
     if (!WinExist("ahk_exe RobloxPlayerBeta.exe")) {
         ToolTip, Error: Roblox is not running., 5, 5
         Sleep, 2000
@@ -129,27 +183,23 @@ CapturePosition() {
         return
     }
     
-    ; Save current active window
     WinGet, previousWindow, ID, A
     
-    ; Activate Roblox window
     WinActivate, ahk_exe RobloxPlayerBeta.exe
-    Sleep, 100  ; Small delay to ensure window activation
+    Sleep, 100  
     
     ToolTip, Now hover your mouse over the desired position and press F4, 5, 5
     KeyWait, F4, D
     KeyWait, F4
     
-    ; Get mouse position
     MouseGetPos, capturedX, capturedY, capturedWin
     
-    ; Verify we're still on Roblox window
     WinGet, capturedExe, ProcessName, ahk_id %capturedWin%
     if (capturedExe != "RobloxPlayerBeta.exe") {
         ToolTip, Error: Position not captured on Roblox window, 5, 5
         Sleep, 2000
         ToolTip
-        ; Restore previous window
+
         WinActivate, ahk_id %previousWindow%
         return
     }
@@ -161,14 +211,13 @@ CapturePosition() {
     Sleep, 1000
     ToolTip
     
-    ; Restore previous window
     WinActivate, ahk_id %previousWindow%
 }
 
 StartClicking() {
-    global isClicking, positionCaptured
+    global isClicking, positionCaptured, useSpacebar
     
-    if (!positionCaptured) {
+    if (!useSpacebar && !positionCaptured) {
         ToolTip, Please capture a position first!, 5, 5
         Sleep, 1000
         ToolTip
@@ -178,10 +227,9 @@ StartClicking() {
     isClicking := true
     
     SetTimer, PerformClick, %clickDelay%
-    TrayTip, Roblox Anti Idle, Auto Clicker: RUNNING. Press F2 to stop., 2, 17
+    TrayTip, Roblox Anti Idle, Auto Clicker: RUNNING. Press F2 to stop. Press F5 to show gui., 2, 17
     GuiControl, Disable, Button5
     GuiControl, Enable, Button6
-
 
     WinHide, Roblox Anti-Idle
 }
@@ -199,59 +247,66 @@ StopClicking() {
 }
 
 PerformClick() {
-    global isClicking, capturedX, capturedY, previousActiveWindow, wasPreviouslyMinimized
+    global isClicking, capturedX, capturedY, previousActiveWindow, wasPreviouslyMinimized, useSpacebar
     
     if (!isClicking)
         return
     
-    ; find Roblox window
     if (WinExist("ahk_exe RobloxPlayerBeta.exe")) {
-        ; save current active window
         WinGet, previousActiveWindow, ID, A
         
-        ; check if Roblox active
         WinGet, activeWin, ID, A
         WinGet, activeExe, ProcessName, ahk_id %activeWin%
         robloxIsActive := (activeExe = "RobloxPlayerBeta.exe")
         
-        ; get Roblox window state
         WinGet, robloxID, ID, ahk_exe RobloxPlayerBeta.exe
         WinGet, robloxMinMax, MinMax, ahk_id %robloxID%
         
-        ; save if Roblox was minimized
         wasPreviouslyMinimized := (robloxMinMax = -1)
         
-        ; activate Roblox window if needed
         if (!robloxIsActive) {
+            if (useSpacebar){
+                WinSet, Transparent, 0, ahk_exe RobloxPlayerBeta.exe
+            }
+
             if (wasPreviouslyMinimized) {
                 WinRestore, ahk_exe RobloxPlayerBeta.exe
             }
+            
             WinActivate, ahk_exe RobloxPlayerBeta.exe
-            ; delay for window activation
             Sleep, 250
         }
         
-        ; send click - move mouse slightly first to ensure it's not idle
-        MouseMove, capturedX+1, capturedY+1, 0 
-        MouseMove, %capturedX%, %capturedY%, 0  
-        Click, %capturedX% %capturedY%
-        Sleep, 150 
-        MouseMove, capturedX+1, capturedY+1, 0 
-        MouseMove, %capturedX%, %capturedY%, 0  
-        Click, %capturedX% %capturedY%
+        if (useSpacebar) {
+            Send, {Space down}
+            Sleep, 50
+            Send, {Space up}
+        } else {
+            MouseMove, capturedX+1, capturedY+1, 0 
+            MouseMove, %capturedX%, %capturedY%, 0  
+            Click, %capturedX% %capturedY%
+            Sleep, 150
+            MouseMove, capturedX+1, capturedY+1, 0 
+            MouseMove, %capturedX%, %capturedY%, 0  
+            Click, %capturedX% %capturedY%
+        }
         
-        ; delay for click to register
-        Sleep, 550
+        Sleep, 250
         
-        ; restore previous state
         if (!robloxIsActive) {
+            WinSet, Bottom,, ahk_exe RobloxPlayerBeta.exe
+            
             if (wasPreviouslyMinimized) {
                 WinMinimize, ahk_exe RobloxPlayerBeta.exe
             }
+            
+            if (useSpacebar){
+            WinSet, Transparent, 255, ahk_exe RobloxPlayerBeta.exe
+            }
+            
             WinActivate, ahk_id %previousActiveWindow%
         }
     } else {
-        ; Roblox not found - stop clicking
         StopClicking()
         ToolTip, Roblox window not found. Anti-Idle stopped., 5, 5
         Sleep, 3000
@@ -259,5 +314,8 @@ PerformClick() {
     }
 }
 
-; exit program w esc
+GuiClose:
+    ExitApp
+    return
+
 Esc::ExitApp
