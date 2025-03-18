@@ -88,8 +88,8 @@ UpdateInterval:
         newDelay := 1
     clickDelay := newDelay
     if (isClicking) {
-        SetTimer, PerformClick, Off
-        SetTimer, PerformClick, %clickDelay%
+        SetTimer, PerformMacro, Off
+        SetTimer, PerformMacro, %clickDelay%
     }
     ToolTip, Click Delay set to %clickDelay%ms, 5, 5
     Sleep, 1000
@@ -103,8 +103,8 @@ ResetInterval:
     GuiControl,, Millisecs, 50
     clickDelay := 50
     if (isClicking) {
-        SetTimer, PerformClick, Off
-        SetTimer, PerformClick, %clickDelay%
+        SetTimer, PerformMacro, Off
+        SetTimer, PerformMacro, %clickDelay%
     }
     ToolTip, Click Delay reset to 50ms, 5, 5
     Sleep, 1000
@@ -226,7 +226,7 @@ StartClicking() {
     
     isClicking := true
     
-    SetTimer, PerformClick, %clickDelay%
+    SetTimer, PerformMacro, %clickDelay%
     TrayTip, Roblox Anti Idle, Auto Clicker: RUNNING. Press F2 to stop. Press F5 to show gui., 2, 17
     GuiControl, Disable, Button5
     GuiControl, Enable, Button6
@@ -238,7 +238,7 @@ StopClicking() {
     global isClicking
     isClicking := false
     
-    SetTimer, PerformClick, Off
+    SetTimer, PerformMacro, Off
     TrayTip, Roblox Anti Idle, Auto Clicker: STOPPED. Press F1 to start again., 2, 17
     GuiControl, Enable, Button5
     GuiControl, Disable, Button6
@@ -246,7 +246,7 @@ StopClicking() {
     WinShow, Roblox Anti-Idle
 }
 
-PerformClick() {
+PerformMacro() {
     global isClicking, capturedX, capturedY, previousActiveWindow, wasPreviouslyMinimized, useSpacebar
     
     if (!isClicking)
