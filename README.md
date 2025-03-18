@@ -9,8 +9,8 @@
 Since ROBLOX does not register inputs if its unfocused. This program helps you to continue whatever you are doing while AFK Farming or grinding in the background!  
   
 The program's logic is the following:    
-- focuses the roblox client
-- sends the input
+- focuses the roblox client  
+- sends the input  
 - unfocuses roblox client  
 
 # How to start?
@@ -22,5 +22,5 @@ Once downloaded, it's all pretty self-explanatory.
 **F1** - to start the script  
 **F2** - to stop the script  
 **F4** - to capture the cursor position (once you clicked "Capture Position")  
-**F5** - to hide/show the program
+**F5** - to hide/show the program  
 **Esc** - to close the script 
