@@ -21,8 +21,8 @@ The program's logic is the following:
 - sends the input
 - unfocuses roblox client  
 # How to start?
-Install AutoHotKey (AHK) from their [website](https://www.autohotkey.com/) if you want to run the script.  
-Head to [releases](https://github.com/JianKEG/Roblox-Anti-Idle/releases) to download the exe file (no need to install AHK).  
+Install AutoHotKey (AHK) from their [website](https://www.autohotkey.com/) if you want to run the script itself.  
+Head to [releases](https://github.com/JianKEG/Roblox-Anti-Idle/releases) to download the latest exe file (no need to install AHK).  
 Once downloaded, it's all pretty self-explanatory.   
 **Make sure Roblox Client is not in fullscreen!**  
 # Keybinds
