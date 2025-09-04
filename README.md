@@ -1,5 +1,5 @@
 # Roblox Anti-Idle
-- Anti AFK for ROBLOX
+- Anti AFK for ROBLOX (Semi Non-Intrusive)
 - Can be used as AutoClicker
 
 > [!NOTE]
